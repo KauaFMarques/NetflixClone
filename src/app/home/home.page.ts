@@ -8,6 +8,12 @@ import { Component } from '@angular/core';
 })
 export class HomePage {
 
-  constructor() {}
+  darkModeEnable: boolean = true;
+
+  constructor() { }
+
+  toggleDarkMode(): void {
+    document.documentElement.classList.toggle("ion-palette-dark", this.darkModeEnable);
+  }
 
 }

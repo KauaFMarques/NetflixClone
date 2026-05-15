@@ -1,9 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonTabs } from '@ionic/angular';
 
 @Component({
-  selector: 'app-tabs', // Mude de 'app-home' para 'app-tabs'
-  templateUrl: './tabs.page.html', // Mude para './tabs.page.html'
-  styleUrls: ['./tabs.page.scss'], // Mude para './tabs.page.scss'
+  selector: 'app-tabs',
+  templateUrl: './tabs.page.html',
+  styleUrls: ['./tabs.page.scss'],
   standalone: false
 })
-export class TabsPage { }
+export class TabsPage implements OnInit {
+
+  @ViewChild(IonTabs) tabs?: IonTabs;
+
+  constructor() { }
+
+  ngOnInit(): void {
+
+  }
+}

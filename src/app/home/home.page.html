@@ -7,14 +7,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">NETFLIX</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-button color="primary">Favorito</ion-button>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-toggle [(ngModel)]="darkModeEnable" (ionChange)="toggleDarkMode()">Dark mode</ion-toggle>
 </ion-content>
