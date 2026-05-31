@@ -52,6 +52,11 @@
         <ion-icon slot="start" name="logo-youtube"></ion-icon>
         Assistir Trailer
       </ion-button>
+      
+      <button class="btn-watchlist" (click)="toggleWatchlist()">
+        <ion-icon [name]="isInWatchlist ? 'bookmark' : 'bookmark-outline'"></ion-icon>
+        {{ isInWatchlist ? 'Salvo' : '+ Watch Later' }}
+      </button>
 
     </div>
   </div>

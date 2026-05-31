@@ -1,13 +1,127 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>profile</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="profile-content">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">profile</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- ═══════════════════════════════════════════════════════════
+       CABEÇALHO DO PERFIL
+  ══════════════════════════════════════════════════════════════ -->
+  <section class="profile-header">
+    <div class="profile-header__glow"></div>
+
+    <!-- Avatar -->
+    <div class="avatar-wrap">
+      <div class="avatar">{{ avatars[profile.avatarIndex] }}</div>
+      <button class="avatar__edit-btn" (click)="startEdit()">
+        <ion-icon name="pencil"></ion-icon>
+      </button>
+    </div>
+
+    <!-- Nome -->
+    <ng-container *ngIf="!isEditing">
+      <h1 class="profile-name">{{ profile.name }}</h1>
+    </ng-container>
+
+    <ng-container *ngIf="isEditing">
+      <div class="edit-name">
+        <input
+          class="edit-name__input"
+          [(ngModel)]="editName"
+          placeholder="Seu nome"
+          maxlength="24"
+          (keyup.enter)="confirmEdit()" />
+        <button class="edit-name__btn edit-name__btn--confirm" (click)="confirmEdit()">
+          <ion-icon name="checkmark"></ion-icon>
+        </button>
+        <button class="edit-name__btn edit-name__btn--cancel" (click)="cancelEdit()">
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </div>
+
+      <!-- Seletor de avatar -->
+      <div class="avatar-picker">
+        <p class="avatar-picker__label">Escolha um avatar</p>
+        <div class="avatar-picker__grid">
+          <button
+            *ngFor="let av of avatars; let i = index"
+            class="avatar-picker__item"
+            [class.avatar-picker__item--active]="profile.avatarIndex === i"
+            (click)="selectAvatar(i)">
+            {{ av }}
+          </button>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Stats -->
+    <div class="stats-row" *ngIf="!isEditing">
+      <div class="stat">
+        <span class="stat__value">{{ totalMovies }}</span>
+        <span class="stat__label">salvos</span>
+      </div>
+      <div class="stat__divider"></div>
+      <div class="stat">
+        <span class="stat__value">{{ avgRating }}</span>
+        <span class="stat__label">nota média</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       WATCH LATER
+  ══════════════════════════════════════════════════════════════ -->
+  <section class="watchlist-section">
+
+    <div class="watchlist-section__header">
+      <div class="watchlist-section__title">
+        <ion-icon name="bookmark"></ion-icon>
+        <h2>Watch Later</h2>
+      </div>
+      <button
+        *ngIf="watchlist.length > 0"
+        class="clear-btn"
+        (click)="clearWatchlist()">
+        Limpar tudo
+      </button>
+    </div>
+
+    <!-- Lista -->
+    <div class="watchlist" *ngIf="watchlist.length > 0">
+      <div
+        class="wl-card"
+        *ngFor="let movie of watchlist"
+        (click)="goToDetail(movie.id)">
+
+        <img
+          class="wl-card__poster"
+          [src]="getPoster(movie.poster_path)"
+          [alt]="movie.title"
+          loading="lazy" />
+
+        <div class="wl-card__info">
+          <p class="wl-card__title">{{ movie.title }}</p>
+          <p class="wl-card__year">{{ movie.release_date | slice:0:4 }}</p>
+          <div class="wl-card__rating">
+            <ion-icon name="star"></ion-icon>
+            {{ movie.vote_average | number:'1.1-1' }}
+          </div>
+          <p class="wl-card__overview">{{ movie.overview | slice:0:80 }}...</p>
+        </div>
+
+        <button
+          class="wl-card__remove"
+          (click)="$event.stopPropagation(); removeFromWatchlist(movie.id)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-watchlist" *ngIf="watchlist.length === 0">
+      <ion-icon name="bookmark-outline" class="empty-watchlist__icon"></ion-icon>
+      <p class="empty-watchlist__title">Nenhum filme salvo</p>
+      <p class="empty-watchlist__sub">
+        Toque em <strong>+ Watch Later</strong> na página de um filme para salvar aqui.
+      </p>
+    </div>
+
+  </section>
+
 </ion-content>

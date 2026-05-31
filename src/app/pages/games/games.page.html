@@ -19,7 +19,7 @@
       <div class="hero__content">
         <div class="hero__badge">
           <ion-icon name="game-controller-outline"></ion-icon>
-          <span>Em Destaque</span>
+          <span>Baseado em Jogo</span>
         </div>
         <h1 class="hero__title">{{ featuredMovie.title }}</h1>
         <p class="hero__overview">{{ featuredMovie.overview | slice:0:120 }}...</p>
@@ -34,15 +34,15 @@
       </div>
     </section>
 
-    <!-- ───────── GENRE CHIPS ───────── -->
+    <!-- ───────── CATEGORY CHIPS ───────── -->
     <section class="filter-bar">
       <div class="filter-bar__scroll">
         <button
-          *ngFor="let g of genres"
+          *ngFor="let c of categories"
           class="chip"
-          [class.chip--active]="activeGenreId === g.id"
-          (click)="applyFilter(g.id)">
-          {{ g.label }}
+          [class.chip--active]="activeCategory === c.key"
+          (click)="applyFilter(c.key)">
+          {{ c.label }}
         </button>
       </div>
     </section>
@@ -51,7 +51,7 @@
     <section class="grid-section">
       <h2 class="grid-section__title">
         <ion-icon name="trophy-outline"></ion-icon>
-        {{ activeGenreId === null ? 'Todos os Títulos' : getGenreLabel(activeGenreId) }}
+        {{ getCategoryLabel(activeCategory) }}
         <span class="grid-section__count">{{ filteredGrid.length }}</span>
       </h2>
 
@@ -82,7 +82,7 @@
       </div>
 
       <p class="empty-state" *ngIf="filteredGrid.length === 0">
-        Nenhum título encontrado para este gênero.
+        Nenhum título encontrado para esta categoria.
       </p>
     </section>
 

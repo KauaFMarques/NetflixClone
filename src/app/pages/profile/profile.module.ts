@@ -5,13 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { ProfilePageRoutingModule } from './profile-routing.module';
-
 import { ProfilePage } from './profile.page';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
+    FormsModule,      // necessário para [(ngModel)] no input de nome
     IonicModule,
     ProfilePageRoutingModule
   ],

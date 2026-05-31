@@ -52,4 +52,10 @@ export class TmdbService {
       this.url('/discover/movie', `&with_genres=${genreId}`)
     );
   }
+
+  getByKeywords(keywordIds: string): Observable<MovieResponse> {
+    return this.http.get<MovieResponse>(
+      this.url('/discover/movie', `&with_keywords=${keywordIds}&sort_by=popularity.desc`)
+    );
+  }
 }

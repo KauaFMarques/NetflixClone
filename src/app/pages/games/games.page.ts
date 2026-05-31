@@ -11,31 +11,28 @@ import { Movie } from '../../type/movie.model';
 })
 export class GamesPage implements OnInit {
 
-  // IDs de gêneros relevantes no TMDB
-  // 12 = Adventure, 28 = Action, 35 = Comedy, 878 = Sci-Fi, 10751 = Family
-  // Para filmes com temática de games/esportes eletrônicos usamos:
-  // 28 (Action), 12 (Adventure), 878 (Science Fiction), 10751 (Family)
-  // + keyword de "video game" (id 10526 no TMDB)
+  // ─── Keywords reais do TMDB para filmes de games ──────────────────────────
+  // 41645 = "based-on-video-game"  → Sonic, Mortal Kombat, Uncharted, etc.
+  // 282   = "video-game"           → filmes com gameplay como tema central
+  // 294546= "video-games"          → cultura gamer, documentários, etc.
+  // Usamos pipe (|) = OR entre keywords para máximo de resultados
 
-  featuredMovie: Movie | null = null;
-  actionMovies: Movie[] = [];
-  adventureMovies: Movie[] = [];
-  scifiMovies: Movie[] = [];
-  familyMovies: Movie[] = [];
+  featuredMovie:    Movie | null = null;
+  basedOnGameMovies: Movie[] = [];   // keyword 41645 – adaptações diretas
+  videoGameMovies:   Movie[] = [];   // keyword 282   – temática de games
+  gameCultureMovies: Movie[] = [];   // keyword 294546 – cultura gamer
 
   readonly imageBase = 'https://image.tmdb.org/t/p';
-
   isLoading = true;
 
-  // Gêneros exibidos como chips filtrável
-  genres = [
-    { id: null,  label: 'Todos' },
-    { id: 28,    label: 'Ação' },
-    { id: 12,    label: 'Aventura' },
-    { id: 878,   label: 'Ficção Científica' },
-    { id: 10751, label: 'Família' },
+  // Chips de sub-categoria
+  categories = [
+    { key: 'all',     label: 'Todos' },
+    { key: 'based',   label: 'Adaptações' },
+    { key: 'themed',  label: 'Temática Gamer' },
+    { key: 'culture', label: 'Cultura Gamer' },
   ];
-  activeGenreId: number | null = null;
+  activeCategory = 'all';
   filteredGrid: Movie[] = [];
 
   constructor(
@@ -50,50 +47,51 @@ export class GamesPage implements OnInit {
   async loadData() {
     this.isLoading = true;
     try {
-      const [action, adventure, scifi, family] = await Promise.all([
-        this.tmdb.getByGenre(28).toPromise(),
-        this.tmdb.getByGenre(12).toPromise(),
-        this.tmdb.getByGenre(878).toPromise(),
-        this.tmdb.getByGenre(10751).toPromise(),
+      const [based, themed, culture] = await Promise.all([
+        this.tmdb.getByKeywords('41645').toPromise(),
+        this.tmdb.getByKeywords('282').toPromise(),
+        this.tmdb.getByKeywords('294546').toPromise(),
       ]);
 
-      this.actionMovies    = (action    as any)?.results ?? [];
-      this.adventureMovies = (adventure as any)?.results ?? [];
-      this.scifiMovies     = (scifi     as any)?.results ?? [];
-      this.familyMovies    = (family    as any)?.results ?? [];
+      this.basedOnGameMovies  = (based   as any)?.results ?? [];
+      this.videoGameMovies    = (themed  as any)?.results ?? [];
+      this.gameCultureMovies  = (culture as any)?.results ?? [];
 
-      // Hero: primeiro item de ação com backdrop
-      this.featuredMovie = this.actionMovies.find(m => m.backdrop_path) ?? this.actionMovies[0] ?? null;
+      // Hero: primeiro item com backdrop entre as adaptações diretas
+      this.featuredMovie =
+        this.basedOnGameMovies.find(m => m.backdrop_path) ??
+        this.basedOnGameMovies[0] ??
+        null;
 
-      this.applyFilter(null);
+      this.applyFilter('all');
     } finally {
       this.isLoading = false;
     }
   }
 
-  applyFilter(genreId: number | null) {
-    this.activeGenreId = genreId;
-    const all = [
-      ...this.actionMovies,
-      ...this.adventureMovies,
-      ...this.scifiMovies,
-      ...this.familyMovies,
-    ];
+  applyFilter(key: string) {
+    this.activeCategory = key;
+
+    let source: Movie[];
+    switch (key) {
+      case 'based':   source = this.basedOnGameMovies;  break;
+      case 'themed':  source = this.videoGameMovies;    break;
+      case 'culture': source = this.gameCultureMovies;  break;
+      default:
+        source = [
+          ...this.basedOnGameMovies,
+          ...this.videoGameMovies,
+          ...this.gameCultureMovies,
+        ];
+    }
+
     // Deduplica por id
     const seen = new Set<number>();
-    const unique = all.filter(m => {
+    this.filteredGrid = source.filter(m => {
       if (seen.has(m.id)) return false;
       seen.add(m.id);
       return true;
     });
-
-    if (genreId === null) {
-      this.filteredGrid = unique;
-    } else {
-      this.filteredGrid = unique.filter(m =>
-        m.genre_ids?.includes(genreId)
-      );
-    }
   }
 
   getPoster(path: string | null | undefined, size = 'w342') {
@@ -104,8 +102,8 @@ export class GamesPage implements OnInit {
     return path ? `${this.imageBase}/${size}${path}` : null;
   }
 
-  getGenreLabel(id: number | null): string {
-    return this.genres.find(g => g.id === id)?.label ?? 'Todos os Títulos';
+  getCategoryLabel(key: string): string {
+    return this.categories.find(c => c.key === key)?.label ?? 'Todos';
   }
 
   goToDetail(id: number) {

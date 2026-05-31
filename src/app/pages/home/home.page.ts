@@ -11,13 +11,15 @@ import { Movie } from '../../type/movie.model';
 })
 export class HomePage implements OnInit {
 
-  heroMovie: Movie | null = null;
-  popular: Movie[]    = [];
-  topRated: Movie[]   = [];
+  heroMovie:  Movie | null = null;
+  popular:    Movie[] = [];
+  topRated:   Movie[] = [];
   nowPlaying: Movie[] = [];
-  trending: Movie[]   = [];
-  imageBase = 'https://image.tmdb.org/t/p';
+  trending:   Movie[] = [];
+
   loading = true;
+
+  readonly imageBase = 'https://image.tmdb.org/t/p';
 
   constructor(private tmdb: TmdbService, private router: Router) {}
 
@@ -32,7 +34,7 @@ export class HomePage implements OnInit {
       this.popular = res.results;
       this.loading = false;
     });
-    this.tmdb.getTopRated().subscribe((res: any) => { this.topRated = res.results; });
+    this.tmdb.getTopRated().subscribe((res: any)   => { this.topRated   = res.results; });
     this.tmdb.getNowPlaying().subscribe((res: any) => { this.nowPlaying = res.results; });
   }
 
@@ -41,13 +43,13 @@ export class HomePage implements OnInit {
   }
 
   getPoster(path: string, size = 'w342') {
-    if (!path) return 'assets/img/placeholder.jpg';
-    return `${this.imageBase}/${size}${path}`;
+    return path ? `${this.imageBase}/${size}${path}` : 'assets/img/placeholder.jpg';
   }
-  getBackdrop(path: string) {
-    if (!path) return '';
-    return `${this.imageBase}/w780${path}`;
+
+  getBackdrop(path: string, size = 'w1280') {
+    return path ? `${this.imageBase}/${size}${path}` : '';
   }
+
   getStars(vote: number): string {
     const stars = Math.round(vote / 2);
     return '★'.repeat(stars) + '☆'.repeat(5 - stars);

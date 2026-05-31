@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { TmdbService } from '../../services/tmdb.service';
+import { WatchlistService } from '../../services/watchlist.service';
+
 
 @Component({
   selector: 'app-detail',
@@ -19,8 +21,20 @@ export class DetailPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private navCtrl: NavController,
-    private tmdb: TmdbService
+    private tmdb: TmdbService,
+    private watchlist: WatchlistService 
   ) {}
+
+  toggleWatchlist() {
+    if (this.movie) {
+      this.watchlist.toggle(this.movie);
+    }
+  }
+  
+  // Getter de conveniência para o template:
+  get isInWatchlist(): boolean {
+    return this.movie ? this.watchlist.has(this.movie.id) : false;
+  }
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
