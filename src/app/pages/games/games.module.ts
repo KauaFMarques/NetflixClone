@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { GamesPageRoutingModule } from './games-routing.module';
-
 import { GamesPage } from './games.page';
 
 @NgModule({

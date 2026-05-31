@@ -1,0 +1,329 @@
+// ─── Tokens ──────────────────────────────────────────────────────────────────
+$bg:        #141414;
+$surface:   #1f1f1f;
+$surface2:  #2a2a2a;
+$accent:    #E50914;
+$accent2:   #ff6b35;   // laranja para gaming
+$text:      #ffffff;
+$text-muted:#aaaaaa;
+$radius:    8px;
+$radius-lg: 14px;
+
+// ─── Host / Content ──────────────────────────────────────────────────────────
+:host {
+  display: block;
+  background: $bg;
+}
+
+.games-content {
+  --background: #{$bg};
+  --color: #{$text};
+}
+
+// ─── Loading ─────────────────────────────────────────────────────────────────
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  gap: 16px;
+}
+
+.loader-ring {
+  width: 48px;
+  height: 48px;
+  border: 3px solid $surface2;
+  border-top-color: $accent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loader-label {
+  font-size: 13px;
+  color: $text-muted;
+  letter-spacing: 0.05em;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// ─── Hero ─────────────────────────────────────────────────────────────────────
+.hero {
+  position: relative;
+  width: 100%;
+  height: 56vw;
+  min-height: 260px;
+  max-height: 420px;
+  overflow: hidden;
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center top;
+    transform: scale(1.04);
+    transition: transform 6s ease;
+    animation: subtle-zoom 8s ease-in-out infinite alternate;
+  }
+
+  &__gradient {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top,  $bg 0%,  rgba($bg, .6) 40%, transparent 70%),
+      linear-gradient(to right, rgba($bg, .5) 0%, transparent 60%);
+  }
+
+  &__content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 0 20px 28px;
+    max-width: 85%;
+    z-index: 2;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba($accent, .18);
+    border: 1px solid rgba($accent, .5);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: $accent;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 10px;
+
+    ion-icon { font-size: 13px; }
+  }
+
+  &__title {
+    font-size: clamp(20px, 6vw, 30px);
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 0 0 8px;
+    text-shadow: 0 2px 12px rgba(0,0,0,.7);
+  }
+
+  &__overview {
+    font-size: 12px;
+    line-height: 1.5;
+    color: rgba($text, .8);
+    margin: 0 0 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+@keyframes subtle-zoom {
+  from { transform: scale(1.04); }
+  to   { transform: scale(1.08); }
+}
+
+// ─── Buttons ──────────────────────────────────────────────────────────────────
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  border-radius: $radius;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 9px 18px;
+  cursor: pointer;
+  transition: transform .15s, filter .15s;
+
+  ion-icon { font-size: 15px; }
+
+  &:active { transform: scale(.95); }
+
+  &--primary {
+    background: $accent;
+    color: $text;
+
+    &:hover { filter: brightness(1.15); }
+  }
+
+  &--ghost {
+    background: rgba(255,255,255,.15);
+    color: $text;
+    backdrop-filter: blur(6px);
+
+    &:hover { background: rgba(255,255,255,.25); }
+  }
+}
+
+// ─── Filter Bar ───────────────────────────────────────────────────────────────
+.filter-bar {
+  padding: 16px 0 4px;
+
+  &__scroll {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+}
+
+.chip {
+  flex-shrink: 0;
+  border: 1.5px solid $surface2;
+  background: $surface;
+  color: $text-muted;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+
+  &:active { transform: scale(.95); }
+
+  &--active {
+    background: $accent;
+    border-color: $accent;
+    color: $text;
+    box-shadow: 0 0 12px rgba($accent, .4);
+  }
+}
+
+// ─── Grid Section ─────────────────────────────────────────────────────────────
+.grid-section {
+  padding: 20px 16px 100px;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    color: $text;
+
+    ion-icon {
+      color: $accent2;
+      font-size: 18px;
+    }
+  }
+
+  &__count {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 400;
+    color: $text-muted;
+    background: $surface2;
+    border-radius: 10px;
+    padding: 2px 8px;
+  }
+}
+
+// ─── Movie Grid ───────────────────────────────────────────────────────────────
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.movie-card {
+  cursor: pointer;
+
+  &__poster-wrap {
+    position: relative;
+    border-radius: $radius;
+    overflow: hidden;
+    aspect-ratio: 2/3;
+    background: $surface2;
+  }
+
+  &__poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .3s ease;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity .25s;
+  }
+
+  &__play {
+    font-size: 44px;
+    color: $text;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,.6));
+  }
+
+  &:active &__poster  { transform: scale(1.05); }
+  &:active &__overlay { opacity: 1; }
+
+  // Hover para web/tablet
+  @media (hover: hover) {
+    &:hover &__poster  { transform: scale(1.05); }
+    &:hover &__overlay { opacity: 1; }
+  }
+
+  &__title {
+    margin: 6px 0 2px;
+    font-size: 11px;
+    font-weight: 600;
+    color: $text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__year {
+    font-size: 10px;
+    color: $text-muted;
+  }
+
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #f5c518;
+
+    ion-icon { font-size: 10px; }
+  }
+}
+
+// ─── Empty State ──────────────────────────────────────────────────────────────
+.empty-state {
+  text-align: center;
+  color: $text-muted;
+  font-size: 14px;
+  padding: 40px 0;
+}

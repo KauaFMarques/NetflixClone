@@ -1,13 +1,91 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>games</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="games-content">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">games</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- ───────── LOADING ───────── -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="loader-ring"></div>
+    <span class="loader-label">Carregando jogos...</span>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+
+    <!-- ───────── HERO BANNER ───────── -->
+    <section class="hero" *ngIf="featuredMovie">
+      <div
+        class="hero__backdrop"
+        [style.backgroundImage]="'url(' + getBackdrop(featuredMovie.backdrop_path) + ')'">
+      </div>
+      <div class="hero__gradient"></div>
+
+      <div class="hero__content">
+        <div class="hero__badge">
+          <ion-icon name="game-controller-outline"></ion-icon>
+          <span>Em Destaque</span>
+        </div>
+        <h1 class="hero__title">{{ featuredMovie.title }}</h1>
+        <p class="hero__overview">{{ featuredMovie.overview | slice:0:120 }}...</p>
+        <div class="hero__actions">
+          <button class="btn btn--primary" (click)="goToDetail(featuredMovie.id)">
+            <ion-icon name="play"></ion-icon> Assistir
+          </button>
+          <button class="btn btn--ghost" (click)="goToDetail(featuredMovie.id)">
+            <ion-icon name="information-circle-outline"></ion-icon> Detalhes
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── GENRE CHIPS ───────── -->
+    <section class="filter-bar">
+      <div class="filter-bar__scroll">
+        <button
+          *ngFor="let g of genres"
+          class="chip"
+          [class.chip--active]="activeGenreId === g.id"
+          (click)="applyFilter(g.id)">
+          {{ g.label }}
+        </button>
+      </div>
+    </section>
+
+    <!-- ───────── GRID ───────── -->
+    <section class="grid-section">
+      <h2 class="grid-section__title">
+        <ion-icon name="trophy-outline"></ion-icon>
+        {{ activeGenreId === null ? 'Todos os Títulos' : getGenreLabel(activeGenreId) }}
+        <span class="grid-section__count">{{ filteredGrid.length }}</span>
+      </h2>
+
+      <div class="movie-grid">
+        <div
+          class="movie-card"
+          *ngFor="let movie of filteredGrid"
+          (click)="goToDetail(movie.id)">
+          <div class="movie-card__poster-wrap">
+            <img
+              class="movie-card__poster"
+              [src]="getPoster(movie.poster_path)"
+              [alt]="movie.title"
+              loading="lazy" />
+            <div class="movie-card__overlay">
+              <ion-icon name="play-circle" class="movie-card__play"></ion-icon>
+            </div>
+          </div>
+          <p class="movie-card__title">{{ movie.title }}</p>
+          <div class="movie-card__meta">
+            <span class="movie-card__year">{{ movie.release_date | slice:0:4 }}</span>
+            <span class="movie-card__rating">
+              <ion-icon name="star"></ion-icon>
+              {{ movie.vote_average | number:'1.1-1' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <p class="empty-state" *ngIf="filteredGrid.length === 0">
+        Nenhum título encontrado para este gênero.
+      </p>
+    </section>
+
+  </ng-container>
+
 </ion-content>
