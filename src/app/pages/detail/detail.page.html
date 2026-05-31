@@ -1,0 +1,59 @@
+<ion-content [fullscreen]="true">
+
+  <!-- loading -->
+  <div *ngIf="loading" style="display:flex;justify-content:center;padding:3rem">
+    <ion-spinner color="danger"></ion-spinner>
+  </div>
+
+  <div *ngIf="movie">
+
+    <!-- BACKDROP -->
+    <div class="backdrop">
+      <img [src]="getBackdrop(movie.backdrop_path)" class="backdrop-img" />
+      <div class="backdrop-overlay"></div>
+      <ion-button fill="clear" class="btn-back" (click)="voltar()">
+        <ion-icon slot="icon-only" name="arrow-back" color="light"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div class="content">
+
+      <div class="title-row">
+        <img [src]="getPoster(movie.poster_path)" class="mini-poster" />
+        <div>
+          <h1 class="title">{{ movie.title }}</h1>
+          <p class="tagline">{{ movie.tagline }}</p>
+          <div class="meta">
+            <span>⭐ {{ movie.vote_average | number:'1.1-1' }}</span>
+            <span>{{ movie.release_date | slice:0:4 }}</span>
+            <span>{{ movie.runtime }} min</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GÊNEROS -->
+      <div class="genres">
+        <ion-chip *ngFor="let g of movie.genres" color="danger" outline="true">
+          {{ g.name }}
+        </ion-chip>
+      </div>
+
+      <!-- SINOPSE -->
+      <h2 class="section-title">Sinopse</h2>
+      <p class="overview">{{ movie.overview }}</p>
+
+      <!-- BOTÃO TRAILER -->
+      <ion-button
+        *ngIf="trailer"
+        expand="block"
+        color="danger"
+        (click)="abrirTrailer()">
+        <ion-icon slot="start" name="logo-youtube"></ion-icon>
+        Assistir Trailer
+      </ion-button>
+
+    </div>
+  </div>
+
+</ion-content>

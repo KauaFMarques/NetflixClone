@@ -1,11 +1,88 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-title>
-      Home
+      <span style="color: #E50914; font-weight: 700; letter-spacing: 2px;">NETFLIX</span>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <p>Netflix</p>
+
+  <!-- HERO BANNER -->
+  <div class="hero" *ngIf="heroMovie">
+    <img [src]="getBackdrop(heroMovie.backdrop_path)" class="hero-img" />
+    <div class="hero-overlay"></div>
+    <div class="hero-info">
+      <h1 class="hero-title">{{ heroMovie.title }}</h1>
+      <p class="hero-overview">{{ heroMovie.overview | slice:0:120 }}...</p>
+      <div class="hero-stars">{{ getStars(heroMovie.vote_average) }}</div>
+      <div class="hero-buttons">
+        <ion-button color="light" size="small">
+          <ion-icon slot="start" name="play"></ion-icon>
+          Assistir
+        </ion-button>
+        <ion-button fill="outline" color="light" size="small">
+          <ion-icon slot="start" name="add"></ion-icon>
+          Minha Lista
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKELETON enquanto carrega -->
+  <div *ngIf="loading" class="row-section">
+    <h2 class="row-title">Carregando...</h2>
+    <div class="poster-row">
+      <ion-skeleton-text
+        *ngFor="let i of [1,2,3,4,5]"
+        animated
+        style="width:110px;height:165px;border-radius:6px;flex-shrink:0;">
+      </ion-skeleton-text>
+    </div>
+  </div>
+
+  <!-- Em alta -->
+  <div class="row-section" *ngIf="trending.length">
+    <h2 class="row-title">🔥 Em alta esta semana</h2>
+    <div class="poster-row">
+<div class="poster-card" *ngFor="let movie of trending" (click)="abrirDetalhe(movie.id)">
+        <img [src]="getPoster(movie.poster_path)" [alt]="movie.title" loading="lazy" />
+        <div class="poster-rating">⭐ {{ movie.vote_average | number:'1.1-1' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Populares -->
+  <div class="row-section" *ngIf="popular.length">
+    <h2 class="row-title">🎬 Populares agora</h2>
+    <div class="poster-row">
+      <div class="poster-card" *ngFor="let movie of popular" (click)="abrirDetalhe(movie.id)">
+        <img [src]="getPoster(movie.poster_path)" [alt]="movie.title" loading="lazy" />
+        <div class="poster-rating">⭐ {{ movie.vote_average | number:'1.1-1' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mais votados -->
+  <div class="row-section" *ngIf="topRated.length">
+    <h2 class="row-title">🏆 Mais votados</h2>
+    <div class="poster-row">
+      <div class="poster-card" *ngFor="let movie of topRated" (click)="abrirDetalhe(movie.id)">
+        <img [src]="getPoster(movie.poster_path)" [alt]="movie.title" loading="lazy" />
+        <div class="poster-rating">⭐ {{ movie.vote_average | number:'1.1-1' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nos cinemas -->
+  <div class="row-section" *ngIf="nowPlaying.length">
+    <h2 class="row-title">🎥 Nos cinemas</h2>
+    <div class="poster-row">
+      <div class="poster-card" *ngFor="let movie of nowPlaying" (click)="abrirDetalhe(movie.id)">
+        <img [src]="getPoster(movie.poster_path)" [alt]="movie.title" loading="lazy" />
+        <div class="poster-rating">⭐ {{ movie.vote_average | number:'1.1-1' }}</div>
+      </div>
+    </div>
+  </div>
+
 </ion-content>
